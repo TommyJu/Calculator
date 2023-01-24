@@ -1,1 +1,2 @@
 # Calculator
+Introduction: The goal of this project is to create a working calculator that can perform basic mathematical operations. Using JavaScript, HTML, and CSS we will have a web application with a dynamic graphical user interface.
