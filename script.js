@@ -48,31 +48,55 @@ function calculate(a, operator, b) {
 // Calculator logic:
 // Store user input as string, every input will append to this string until an operator is used
     // display the input string for every input except for the operator input.
-// Create 3 variables for 'a, operator, b' where a and b are strings to be converted to integers.
-    // The use of an operator will assign the user input string to the appropriate variable then clear it.
-// After the 3 variables are assigned (operation pair), call operate() using 'equals' key
-    // NOTE: 'equals' key will have to store the current user input string to 'b' before operating
-    // All variables are strings, temporarily convert numbers to ints in calculate()
-    // Account for division by zero
-    // Prevent operators from being repeated
+        // Account for division by zero
+        // Prevent the same operators from being repeated (compare with stored variable)
         // Can check for an existing operator when pressing an operator button
-    // allow only one decimal per number (perform check when decimal button pressed)
-    // Operation occurs when the 'equals' button is pressed, however using an operator after
-    // inputing a second number (b) will act like an 'equals' button and store that
-    // operator for the next result.
-// Display the result and store it as the first number (a) for the next calc.
+        // allow only one decimal per number (perform check when decimal button pressed)
 
-let isOperationPair = false;
-let isSecondNumber = false;
-let existingOperator = false;
-let existingDecimal = false;
+// Create 3 variables for 'a, operator, b' where a and b are strings to be temporarily converted to integers.
+    
+// The use of an operator will assign the user input string to the appropriate variable then clear it.
+        
+        // There are three cases:
+            // 1. Using an operator before 'a' just stores the operator
+            // 2. Using an operator in between a number pair assigns userInput to 'a', stores the operator, and clears userInput
+                // determine in between number pair based on non empty 'a' or userInput 
+            // 3. Using an operator after a number pair stores the operator and works like an equals button
+                // Store operator, then call operate()
+                    // determine number pair by non empty 'a', 'operator', and userInput
+        
+            // operator variable stays the same unless cleared or another operator is assigned
+
+
+// call operate() using 'equals' button
+    
+        // There are multiple cases for operate ():
+        // In all cases: clear userInput before performing the next operation
+            // pressing = with only an operator does nothing
+            // pressing = without an assigned operator stores 'a' and returns 'a'
+            // Pressing = with only one number present and an operator will perform the operation with the first number as the second
+                // repeatedly pressing = will constantly perform the same operation with 'a' as a running total
+            // Pressing = with an operation pair performs the operation with the select a and b values and operator is stored
+            // Pressing = after selecting an operator then a number will simply return the number, assign it to b, and store the operator
+            
+            // 1. If there is only an operator, clear operator and do nothing
+            // 2. In the absence of an operator and a 'b' value, assign userInput to 'a' if userInput is non-empty
+                // If userInput is empty, simply return 'a' which is initially set to "0"
+            // 3. If there is no 'b' value, a = b, calculate and assign result to 'a', then display 'a'
+                // ie: userInput === '' when pressing enter
+            // 4. If there is no 'a' value, return b, keep stored operator, and assign 'b' to 'a'
+            // 5. if you have 'a', 'operator', and 'b', pressing '=' will assign userInput to 'b', then assign result to 'a' and return 'a'
+                // ie: userInput !== '' when pressing =
+            // operator variable stays the same unless cleared or another variable is pressed
+
+
 // values to be used in calculate()
-let a = "";
+let a = "0";
 let operator = "";
-let b = "";
+let b = "0";
 
 let userInput = "";
-//let inputDisplayValue = '';
+
 
 
 
@@ -83,33 +107,25 @@ function displayAndAppend(event) {
     inputDisplay.textContent = userInput;
 }
 
-// function for operationBtns, store user input to appropriate variable then clear
-    //isOperationPair becomes true when a existing operator is present and then a number is inputted.
+// store operator and userInput to appropriate variables
 function storeValue(event) {
-    if (isOperationPair) {
-        isOperationPair = false;
-        // call operation func etc etc
+    
+    // case 1/store value
+    operator = event.currentTarget.textContent;
+
+    // case #3
+    if (a !== '' && operator !== '' && userInput !== '') {
         operate();
-        operator = event.currentTarget.textContent;
-        existingOperator = true;
+        console.log('case 3');
     }
-    else if (isSecondNumber) {
-        b = userInput;
-        userInput = '';
-        operator = event.currentTarget.textContent;
-        console.log(operator);
-        console.log(b);
-    }
-    else {
+    
+    // case #2
+    else if (a !== '' || userInput !== '') {
         a = userInput;
         userInput = '';
-        operator = event.currentTarget.textContent;
-        console.log(operator);
-        console.log(a);
+        console.log('case 2');
     }
 }
-
-
 
 numberBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -124,18 +140,36 @@ operationBtns.forEach(btn => {
 });
 
 
-
 function operate() {
-    a = calculate(a, operator, b);
-    inputDisplay.textContent = a;
 
-    operator = '';
+    // case 1
+    if (userInput === '' && a === '' && operator !== '' && b === '') {
+        operator = '';
+    }
+
+    // case 2
+    else if (operator === '' && b === '') {
+        if (userInput !== '') {
+            a = userInput;
+            inputDisplay.textContent = a;
+        }
+        
+        else {
+            inputDisplay.textContent = a;
+        }
+        
+    }
+
+    // case 3
+    else if () {}
+
+    // reset userInput for next operation
+    console.log('operation complete');
+    console.log(a);
+    console.log(operator);
+    console.log(b);
+    
     userInput = '';
-    b = '';
-    isOperationPair = false;
-    isSecondNumber = false;
-    existingOperator = false;
-    existingDecimal = false;
 }
 
 equalsKey.addEventListener('click', (e) => {
