@@ -2,6 +2,9 @@ const display = document.querySelector('#display');
 const numberBtns = document.querySelectorAll('.number-btn');
 const operationBtns = document.querySelectorAll('.operation-btn');
 const equalsKey = document.querySelector('#equals-key');
+const negativeBtn = document.querySelector('#negative-btn');
+const decimalBtn = document.querySelector('#decimal-btn');
+const clearBtn = document.querySelector('#clear-btn');
 
 function add (a, b) {
     return (+a + +b).toString();
@@ -151,6 +154,44 @@ operationBtns.forEach(btn => {
     });
 });
 
+// Toggles negative/positive for the display number and alters the respective variable
+// The display number corresponds to either 'a' or 'userInput'
+    // An empty userInput will relate the display number to 'a'  
+        // If '-' already present, remove.
+
+negativeBtn.addEventListener('click', (e) => {
+    if (userInput === '') {
+        if (a.includes('-')) {
+            a = a.slice(1);
+        }
+        else {
+            a = '-' + a;
+        }
+        display.textContent = a;
+    }
+    
+    else {
+        if (userInput.includes('-')) {
+            userInput = userInput.slice(1);
+        }
+        else {
+            userInput = '-' + userInput;
+        }
+        display.textContent = userInput;
+    }
+})
+
+// Adds a decimal only if one is not already present
+decimalBtn.addEventListener('click', (e) => {
+    if (!userInput.includes('.')) {
+        displayAndAppend(e);
+    }
+})
+
+clearBtn.addEventListener('click', (e) => {
+    a = operator = b = userInput = '';
+    display.textContent = '0';
+})
 
 function operate() {
 
