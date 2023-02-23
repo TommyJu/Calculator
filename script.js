@@ -57,9 +57,10 @@ function calculate(a, operator, b) {
     
 // The use of an operator will assign the user input string to the appropriate variable then clear it.
         
-        // There are three cases:
+        // There are three cases for storeValue():
             // 1. Using an operator before 'a' just stores the operator
-            // 2. Using an operator in between a number pair assigns userInput to 'a', stores the operator, and clears userInput
+            // 2. Using an operator in between a number pair stores the operator, and clears userInput
+            // 2.5. Assign userInput to 'a' IF 'a' is empty
                 // determine in between number pair based on non empty 'a' or userInput 
             // 3. Using an operator after a number pair stores the operator and works like an equals button
                 // Store operator, then call operate()
@@ -84,10 +85,13 @@ function calculate(a, operator, b) {
                 // If userInput is empty, simply return 'a' 
             // 3. In the absence of only a 'b' value, a = b, calculate and assign result to 'a', then display 'a'
                 // For 'b' to be empty, userInput === '' after 'a' is stored and an operator is pressed.
-            // 4. If there is no 'a' value, return b, keep stored operator, and assign 'b' to 'a'
+            // 4. If there is no 'a' value and assigned b value, keep stored operator, and assign/display 'userInput' to 'a' and 'b'
+                // Note: it is impossible to have an empty 'a' value if there is an assigned b value.
             // 5. if you have 'a', 'operator', and a non-empty userInput, pressing '=' will assign userInput to 'b', then assign result to 'a' and return 'a'
                 // ie: userInput !== '' when pressing =
+            // 6. If you have 'a', 'operator', 'b', and an empty userInput, pressing '=' will peform a calculation and assign/display result to 'a'
             // operator variable stays the same unless cleared or another variable is pressed
+            // 7. If you have a non-empty 'a', 'operator', 'b', 'userInput', overwrite 'b' with 'userInput' and assign/display calculation to 'a'
 
 
 // values to be used in calculate()
@@ -120,14 +124,19 @@ function storeValue(event) {
     }
     
     // case #2
-    else if (a !== '' || userInput !== '') {
+    else if (userInput !== '') {
         a = userInput;
         userInput = '';
         console.log('storeValue case 2');
     }
 
+    // case #2.5
+    else if (a !== '') {
+        userInput = '';
+    } 
+
     else {
-        console.log("no storeValue case");
+        console.log("storeValue case 1");
     }
 }
 
@@ -177,9 +186,9 @@ function operate() {
     }
 
     // case 4
-    else if (a === '' && operator !== '' && b !== '') {
-        inputDisplay.textContent = b;
-        a = b;
+    else if (a === '' && b === '' && operator !== '' && userInput !== '') {
+        a = b = userInput;
+        inputDisplay.textContent = userInput;
         console.log("operate case 4");
     }
 
@@ -189,6 +198,21 @@ function operate() {
         a = calculate(a, operator, b);
         inputDisplay.textContent = a;
         console.log("operate case 5");
+    }
+
+    // case 6
+    else if (a !== '' && operator !== '' && b !== '' && userInput === '') {
+        a = calculate(a, operator, b);
+        inputDisplay.textContent = a;
+        console.log('operate case 6');
+    }
+
+    // case 7
+    else if (a !== '' && operator !== '' && b !== '' && userInput !== '') {
+        b = userInput;
+        a = calculate(a, operator, b);
+        inputDisplay.textContent = a;
+        console.log('operate case 7');
     }
 
     else {
