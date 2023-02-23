@@ -1,5 +1,4 @@
-const inputDisplay = document.querySelector('#input-display');
-const outputDisplay = document.querySelector('#output-display');
+const display = document.querySelector('#display');
 const numberBtns = document.querySelectorAll('.number-btn');
 const operationBtns = document.querySelectorAll('.operation-btn');
 const equalsKey = document.querySelector('#equals-key');
@@ -108,7 +107,7 @@ let userInput = "";
 function displayAndAppend(event) {
     userInput = userInput + event.currentTarget.textContent;
     // update display
-    inputDisplay.textContent = userInput;
+    display.textContent = userInput;
 }
 
 // store operator and userInput to appropriate variables
@@ -165,12 +164,12 @@ function operate() {
     else if (operator === '' && b === '') {
         if (userInput !== '') {
             a = userInput;
-            inputDisplay.textContent = a;
+            display.textContent = a;
             console.log("operate case 2");
         }
         
         else {
-            inputDisplay.textContent = a;
+            display.textContent = a;
             console.log("operate case 2 (else)");
         }
         
@@ -180,7 +179,7 @@ function operate() {
     else if (a !== '' && operator !== '' && b === '' && userInput === '') {
         b = a;
         a = calculate(a, operator, b);
-        inputDisplay.textContent = a;
+        display.textContent = a;
         console.log("operate case 3");
 
     }
@@ -188,7 +187,7 @@ function operate() {
     // case 4
     else if (a === '' && b === '' && operator !== '' && userInput !== '') {
         a = b = userInput;
-        inputDisplay.textContent = userInput;
+        display.textContent = userInput;
         console.log("operate case 4");
     }
 
@@ -196,14 +195,14 @@ function operate() {
     else if (a !== '' && operator !== '' && b === '' && userInput !== '') {
         b = userInput;
         a = calculate(a, operator, b);
-        inputDisplay.textContent = a;
+        display.textContent = a;
         console.log("operate case 5");
     }
 
     // case 6
     else if (a !== '' && operator !== '' && b !== '' && userInput === '') {
         a = calculate(a, operator, b);
-        inputDisplay.textContent = a;
+        display.textContent = a;
         console.log('operate case 6');
     }
 
@@ -211,7 +210,7 @@ function operate() {
     else if (a !== '' && operator !== '' && b !== '' && userInput !== '') {
         b = userInput;
         a = calculate(a, operator, b);
-        inputDisplay.textContent = a;
+        display.textContent = a;
         console.log('operate case 7');
     }
 
@@ -219,12 +218,13 @@ function operate() {
         console.log("no operate case");
     }
 
-    // reset userInput for next operation
+    
     console.log("a: " + a);
     console.log("operator: " + operator);
     console.log("b: " + b);
     console.log("userInput: " + userInput);
     
+    // reset userInput for next operation
     userInput = '';
 }
 
