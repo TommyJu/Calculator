@@ -81,19 +81,19 @@ function calculate(a, operator, b) {
             
             // 1. If there is only an operator, clear operator and do nothing
             // 2. In the absence of an operator and a 'b' value, assign userInput to 'a' if userInput is non-empty
-                // If userInput is empty, simply return 'a' which is initially set to "0"
-            // 3. If there is no 'b' value, a = b, calculate and assign result to 'a', then display 'a'
-                // ie: userInput === '' when pressing enter
+                // If userInput is empty, simply return 'a' 
+            // 3. In the absence of only a 'b' value, a = b, calculate and assign result to 'a', then display 'a'
+                // For 'b' to be empty, userInput === '' after 'a' is stored and an operator is pressed.
             // 4. If there is no 'a' value, return b, keep stored operator, and assign 'b' to 'a'
-            // 5. if you have 'a', 'operator', and 'b', pressing '=' will assign userInput to 'b', then assign result to 'a' and return 'a'
+            // 5. if you have 'a', 'operator', and a non-empty userInput, pressing '=' will assign userInput to 'b', then assign result to 'a' and return 'a'
                 // ie: userInput !== '' when pressing =
             // operator variable stays the same unless cleared or another variable is pressed
 
 
 // values to be used in calculate()
-let a = "0";
+let a = "";
 let operator = "";
-let b = "0";
+let b = "";
 
 let userInput = "";
 
@@ -116,14 +116,18 @@ function storeValue(event) {
     // case #3
     if (a !== '' && operator !== '' && userInput !== '') {
         operate();
-        console.log('case 3');
+        console.log('storeValue case 3');
     }
     
     // case #2
     else if (a !== '' || userInput !== '') {
         a = userInput;
         userInput = '';
-        console.log('case 2');
+        console.log('storeValue case 2');
+    }
+
+    else {
+        console.log("no storeValue case");
     }
 }
 
@@ -143,8 +147,9 @@ operationBtns.forEach(btn => {
 function operate() {
 
     // case 1
-    if (userInput === '' && a === '' && operator !== '' && b === '') {
+    if (a === '' && operator !== '' && b === '' && userInput === '') {
         operator = '';
+        console.log("operate case 1");
     }
 
     // case 2
@@ -152,27 +157,53 @@ function operate() {
         if (userInput !== '') {
             a = userInput;
             inputDisplay.textContent = a;
+            console.log("operate case 2");
         }
         
         else {
             inputDisplay.textContent = a;
+            console.log("operate case 2 (else)");
         }
         
     }
 
     // case 3
-    else if () {}
+    else if (a !== '' && operator !== '' && b === '' && userInput === '') {
+        b = a;
+        a = calculate(a, operator, b);
+        inputDisplay.textContent = a;
+        console.log("operate case 3");
+
+    }
+
+    // case 4
+    else if (a === '' && operator !== '' && b !== '') {
+        inputDisplay.textContent = b;
+        a = b;
+        console.log("operate case 4");
+    }
+
+    // case 5
+    else if (a !== '' && operator !== '' && b === '' && userInput !== '') {
+        b = userInput;
+        a = calculate(a, operator, b);
+        inputDisplay.textContent = a;
+        console.log("operate case 5");
+    }
+
+    else {
+        console.log("no operate case");
+    }
 
     // reset userInput for next operation
-    console.log('operation complete');
-    console.log(a);
-    console.log(operator);
-    console.log(b);
+    console.log("a: " + a);
+    console.log("operator: " + operator);
+    console.log("b: " + b);
+    console.log("userInput: " + userInput);
     
     userInput = '';
 }
 
 equalsKey.addEventListener('click', (e) => {
-    b = userInput;
     operate();
 });
