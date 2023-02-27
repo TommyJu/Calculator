@@ -142,14 +142,21 @@ function storeValue(event) {
     }
 }
 
+let sound = new Audio("click.mp3");
+sound.volume = 0.3;
+
 numberBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
+        sound.play();
+        sound.currentTime=0;
         displayAndAppend(e);
     });
 });
 
 operationBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
+        sound.play();
+        sound.currentTime=0;
         storeValue(e);
     });
 });
@@ -160,6 +167,8 @@ operationBtns.forEach(btn => {
         // If '-' already present, remove.
 
 negativeBtn.addEventListener('click', (e) => {
+    sound.play();
+    sound.currentTime=0;
     if (userInput === '') {
         if (a.includes('-')) {
             a = a.slice(1);
@@ -183,6 +192,8 @@ negativeBtn.addEventListener('click', (e) => {
 
 // Adds a decimal only if one is not already present
 decimalBtn.addEventListener('click', (e) => {
+    sound.play();
+    sound.currentTime=0;
     if (!userInput.includes('.')) {
         displayAndAppend(e);
     }
@@ -270,5 +281,7 @@ function operate() {
 }
 
 equalsKey.addEventListener('click', (e) => {
+    sound.play();
+    sound.currentTime=0;
     operate();
 });
