@@ -172,32 +172,28 @@ operationBtns.forEach(btn => {
     });
 });
 
-// Toggles negative/positive for the display number and alters the respective variable
-// The display number corresponds to either 'a' or 'userInput'
-    // An empty userInput will relate the display number to 'a'
-    // A non-empty userInput will relate the display number to 'userInput'
-        // If '-' already present, remove.
+// Toggles negative/positive for a given string
+    // Only if the string is non-empty
+        // If '-' already present, remove and vice versa.
 
-function negateString(displayNum) {
-    if (displayNum.includes('-')) {
-        displayNum = displayNum.slice(1);
+function negateString(str) {
+    // A number must be present before converting +/=
+    if (str !== '') {
+        if (str.includes('-')) {
+            str = str.slice(1);
+        }
+        else {
+            str = '-' + str;
+        }
+        
     }
-    else {
-        displayNum = '-' + displayNum;
-    }
-    display.textContent = displayNum;
+    return str;
 }
 
 negateBtn.addEventListener('click', (e) => {
-    
     playSound();
-    
-    if (userInput === '') {
-        negateString(a);
-    }
-    else {
-        negateString(userInput);
-    }
+    userInput = negateString(userInput);
+    display.textContent = userInput;
 })
 
 
@@ -213,7 +209,7 @@ decimalBtn.addEventListener('click', (e) => {
 clearBtn.addEventListener('click', (e) => {
     playSound();
     a = operator = b = userInput = '';
-    display.textContent = '0';
+    display.textContent = '';
 })
 
 function operate() {
