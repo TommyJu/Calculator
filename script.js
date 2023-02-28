@@ -2,7 +2,7 @@ const display = document.querySelector('#display');
 const numberBtns = document.querySelectorAll('.number-btn');
 const operationBtns = document.querySelectorAll('.operation-btn');
 const equalsKey = document.querySelector('#equals-key');
-const negativeBtn = document.querySelector('#negative-btn');
+const negateBtn = document.querySelector('#negative-btn');
 const decimalBtn = document.querySelector('#decimal-btn');
 const clearBtn = document.querySelector('#clear-btn');
 
@@ -87,13 +87,22 @@ function calculate(a, operator, b) {
                 // If userInput is empty, simply return 'a' 
             // 3. In the absence of only a 'b' value, a = b, calculate and assign result to 'a', then display 'a'
                 // For 'b' to be empty, userInput === '' after 'a' is stored and an operator is pressed.
-            // 4. If there is no 'a' value and assigned b value, keep stored operator, and assign/display 'userInput' to 'a' and 'b'
-                // Note: it is impossible to have an empty 'a' value if there is an assigned b value.
+            // 4. If there is no 'a' value and b value, keep stored operator, and assign/display non-empty 'userInput' to 'a' and 'b'
             // 5. if you have 'a', 'operator', and a non-empty userInput, pressing '=' will assign userInput to 'b', then assign result to 'a' and return 'a'
                 // ie: userInput !== '' when pressing =
             // 6. If you have 'a', 'operator', 'b', and an empty userInput, pressing '=' will peform a calculation and assign/display result to 'a'
             // operator variable stays the same unless cleared or another variable is pressed
             // 7. If you have a non-empty 'a', 'operator', 'b', 'userInput', overwrite 'b' with 'userInput' and assign/display calculation to 'a'
+
+            /* 
+            Refactoring:
+            NOTE: all cases except for 2 have a non-empty operator var
+            combone and simplify cases 1 and 4
+            combine simplify cases 3, 5, 6 and 7
+            cases 5 and 7 have similarities 
+
+            
+            */
 
 
 // values to be used in calculate()
@@ -143,69 +152,131 @@ function storeValue(event) {
 }
 
 let sound = new Audio("click.mp3");
-sound.volume = 0.3;
+
+function playSound() {
+    sound.play();
+    sound.currentTime=0;
+}
 
 numberBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        sound.play();
-        sound.currentTime=0;
+        playSound();
         displayAndAppend(e);
     });
 });
 
 operationBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        sound.play();
-        sound.currentTime=0;
+        playSound();
         storeValue(e);
     });
 });
 
 // Toggles negative/positive for the display number and alters the respective variable
 // The display number corresponds to either 'a' or 'userInput'
-    // An empty userInput will relate the display number to 'a'  
+    // An empty userInput will relate the display number to 'a'
+    // A non-empty userInput will relate the display number to 'userInput'
         // If '-' already present, remove.
 
-negativeBtn.addEventListener('click', (e) => {
-    sound.play();
-    sound.currentTime=0;
-    if (userInput === '') {
-        if (a.includes('-')) {
-            a = a.slice(1);
-        }
-        else {
-            a = '-' + a;
-        }
-        display.textContent = a;
+function negateString(displayNum) {
+    if (displayNum.includes('-')) {
+        displayNum = displayNum.slice(1);
     }
-    
     else {
-        if (userInput.includes('-')) {
-            userInput = userInput.slice(1);
-        }
-        else {
-            userInput = '-' + userInput;
-        }
-        display.textContent = userInput;
+        displayNum = '-' + displayNum;
+    }
+    display.textContent = displayNum;
+}
+
+negateBtn.addEventListener('click', (e) => {
+    
+    playSound();
+    
+    if (userInput === '') {
+        negateString(a);
+    }
+    else {
+        negateString(userInput);
     }
 })
 
+
+
 // Adds a decimal only if one is not already present
 decimalBtn.addEventListener('click', (e) => {
-    sound.play();
-    sound.currentTime=0;
+    playSound();
     if (!userInput.includes('.')) {
         displayAndAppend(e);
     }
 })
 
 clearBtn.addEventListener('click', (e) => {
+    playSound();
     a = operator = b = userInput = '';
     display.textContent = '0';
 })
 
 function operate() {
+    // case 2
+    if (operator === '' && b === '') {
+        if (userInput !== '') {
+            a = userInput;
+            display.textContent = a;
+            console.log("operate case 2");
+        }
+        
+        else {
+            display.textContent = a;
+            console.log("operate case 2 (else)");
+        }
+    }
 
+    else if (operator !== '') {
+        // cases 1, 4
+        if (a === '' && b === '') {
+            // case 1
+            if (userInput === '') {
+                operator = '';
+                console.log("operate case 1");
+            }
+            // case 4
+            else {
+                a = b = userInput;
+                display.textContent = userInput;
+                console.log("operate case 4");
+            }
+        }
+        // cases 3, 5, 6, 7
+        else if (a !== '') {
+            
+            // cases 5 and 7 
+            if (userInput !== '') {
+                b = userInput;
+                a = calculate(a, operator, b);
+                display.textContent = a;
+                console.log('operate case 5 and 7');
+            }
+
+            // case 3
+            else if (b === '') {
+                b = a;
+                a = calculate(a, operator, b);
+                display.textContent = a;
+                console.log("operate case 3");
+            }
+            // case 6
+            else if (b !== '') {
+                a = calculate(a, operator, b);
+                display.textContent = a;
+                console.log('operate case 6');
+            }
+        }
+    }
+    else {
+        console.log('no operate case');
+    }
+
+/*
     // case 1
     if (a === '' && operator !== '' && b === '' && userInput === '') {
         operator = '';
@@ -270,7 +341,8 @@ function operate() {
         console.log("no operate case");
     }
 
-    
+    */
+
     console.log("a: " + a);
     console.log("operator: " + operator);
     console.log("b: " + b);
